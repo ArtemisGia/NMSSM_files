@@ -76,7 +76,7 @@ class NMSSMFileHandler:
 
    
 
-    def update_nmssm_params(self, LAM, kappa, tanb, At):
+    def update_nmssm_params(self, LAM, kappa, tanb, At, Ak, mA ):
         try:
             found_extpar = False
             found_minpar = False
@@ -120,6 +120,16 @@ class NMSSMFileHandler:
                         # For parameter 62 (kappa) replacement
                         if row_parts[0] == '62':
                             row_parts[1] = f"{kappa:.4E}"  # Update with kappa value
+                            row = leading_whitespace + ' '.join(row_parts) + '\n'
+
+                        # For parameter 64 (AKAPPA) replacement 
+                        if row_parts[0] == '64':
+                            row_parts[1] = f"{Ak:.4E}"  # Update with LAM value
+                            row = leading_whitespace + ' '.join(row_parts) + '\n'
+
+                        # For parameter 124 (mA) replacement 
+                        if row_parts[0] == '124':
+                            row_parts[1] = f"{mA:.4E}"  # Update with LAM value
                             row = leading_whitespace + ' '.join(row_parts) + '\n'
 
                         # For parameter AU3
