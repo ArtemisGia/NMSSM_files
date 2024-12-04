@@ -242,3 +242,35 @@ class NMSSMFileHandler:
         except Exception as e:
             print(f"An error occurred: {e}")
             return mixing_matrix  # Return the matrix even if it's incomplete
+
+
+    def find_higgs_error(self, spectr):
+        
+        ''' Function to find and save the uncertainties from the CP even Higgs mass calculations. 
+        The order is lightest - second lightest - heaviest CP even Higgs eigenstate '''
+        
+        higgs_errors = []
+        found_error_block = False
+    
+        try:
+            # Open the file for reading
+            with open(spectr, 'r') as file:
+                for line in file:
+                    if "BLOCK DMASS" in line:
+                        found_error_block = True
+                        continue 
+                    if found_error_block:
+                        parts = line.split()
+                        if len(parts) < 2:
+                            continue
+                        if parts[1] == '#':
+                            higgs_errors.append(float(parts[0]))
+                        if len(higgs_errors) == 3:
+                            break
+            return higgs_errors
+    
+        except Exception as e:
+            print(f"An error occured: {e}")
+            return [None, None, None]
+            
+                            
