@@ -160,7 +160,7 @@ class NMSSMFileHandler:
     
         except Exception as e:
             print(f"An error occurred: {e}")
-
+            
 
     def find_higgs_mass(self, spectr):
         higgs25 = None
