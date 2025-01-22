@@ -2,81 +2,9 @@ import re
 class NMSSMFileHandler:
     ''' Designed to read and update the values of the NMSSM parameters in NMSSMTools'''
     def __init__(self, filename):
-        self.filename = filename
+        self.filename = filename   
 
-    # def update_nmssm_params(self, LAM, kappa, tanb):
-    #     try:
-    #         found_extpar = False
-    #         found_minpar = False
-    #         # Step 1: Read the file into a list of lines
-    #         with open(self.filename, 'r') as file1:
-    #             rows = file1.readlines()
-
-    #         # Step 2: Open the file for writing (this will overwrite the file content)
-    #         with open(self.filename, 'w') as file:
-    #             for i in range(len(rows)):
-    #                 row = rows[i]
-
-    #                 # Step 3: Extract the leading whitespace from the row
-    #                 leading_whitespace = row[:len(row) - len(row.lstrip())]
-
-    #                 # Remove the leading whitespace and split the row into columns
-    #                 row_parts = row.strip().split()
-    #                 if "BLOCK MINPAR" in row:
-    #                     found_minpar = True
-                        
-    #                 if found_minpar and len(row_parts) > 3:
-    #                     if row_parts[0] == '3':
-    #                         row_parts[1] = f"{tanb:.1E}" 
-    #                         row = leading_whitespace + ' '.join(row) + '\n'                     
-                    
-    #                 if "BLOCK EXTPAR" in row:
-    #                     found_extpar = True
-                    
-    #                 # Check if there are at least 3 parts (flag, value, comment)
-    #                 if found_extpar and len(row_parts) >= 3:
-                        
-    #                     if row_parts[0] == '61':
-                           
-    #                         original_value_start = row.find(row_parts[1])
-    #                         original_value_end = original_value_start + len(row_parts[1])
-
-                            
-    #                         spacing_before_value = row[:original_value_start]
-    #                         spacing_after_value = row[original_value_end:]
-
-                            
-    #                         new_value = f"{LAM:.4E}"  # Scientific notation (optional)
-
-    #                         # Format the new row with the same spacing
-    #                         row = f"{spacing_before_value}{new_value}{spacing_after_value}"
-                            
-    #                     if row_parts[0] == '62':
-                           
-    #                         original_value_start = row.find(row_parts[1])
-    #                         original_value_end = original_value_start + len(row_parts[1])
-
-                            
-    #                         spacing_before_value = row[:original_value_start]
-    #                         spacing_after_value = row[original_value_end:]
-
-                            
-    #                         new_value = f"{kappa:.6E}"  # Scientific notation (optional)
-
-    #                         # Format the new row with the same spacing
-    #                         row = f"{spacing_before_value}{new_value}{spacing_after_value}"
-                            
-    #                 # Write the updated or unchanged row to the file
-    #                 file.write(row)
-
-    #         print(f"File '{self.filename}' successfully updated with LAM={LAM}")
-
-    #     except Exception as e:
-    #         print(f"An error occurred: {e}")
-
-   
-
-    def update_nmssm_params(self, LAM, kappa, tanb, At, Ak, mA ):
+    def update_nmssm_params(self, LAM, kappa, tanb, At, Ak, mA, mueff ):
         try:
             found_extpar = False
             found_minpar = False
@@ -124,12 +52,17 @@ class NMSSMFileHandler:
 
                         # For parameter 64 (AKAPPA) replacement 
                         if row_parts[0] == '64':
-                            row_parts[1] = f"{Ak:.4E}"  # Update with LAM value
+                            row_parts[1] = f"{Ak:.4E}"  # Update with Ak value
+                            row = leading_whitespace + ' '.join(row_parts) + '\n'
+                            
+                        # For parameter 65 (MUEFF) replacement 
+                        if row_parts[0] == '65':
+                            row_parts[1] = f"{mueff:.2E}"  # Update with mueff value
                             row = leading_whitespace + ' '.join(row_parts) + '\n'
 
                         # For parameter 124 (mA) replacement 
                         if row_parts[0] == '124':
-                            row_parts[1] = f"{mA:.4E}"  # Update with LAM value
+                            row_parts[1] = f"{mA:.4E}"  # Update with mA value
                             row = leading_whitespace + ' '.join(row_parts) + '\n'
 
                         # For parameter AU3
@@ -146,11 +79,6 @@ class NMSSMFileHandler:
                         if row_parts[0] == '13':
                             row_parts[1] = f"{At:.2E}"  
                             row = leading_whitespace + ' '.join(row_parts) + '\n'
-
-                        # # For parameter 65 mueff
-                        # if row_parts[0] == '65':
-                        #     row_parts[1] = f"{mu:.4E}"  # Update with kappa value
-                        #     row = leading_whitespace + ' '.join(row_parts) + '\n'
 
                     
                     # Write the updated or unchanged row to the file
