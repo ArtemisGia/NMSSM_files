@@ -4,7 +4,7 @@ class NMSSMFileHandler:
     def __init__(self, filename):
         self.filename = filename   
 
-    def update_nmssm_params(self, LAM, kappa, tanb, At, Ak, mA, mueff ):
+    def update_nmssm_params(self, LAM, kappa, tanb, At, Ak, mA, mueff, M1, M2, M3 ):
         try:
             found_extpar = False
             found_minpar = False
@@ -78,6 +78,21 @@ class NMSSMFileHandler:
                         # For parameter AE3
                         if row_parts[0] == '13':
                             row_parts[1] = f"{At:.2E}"  
+                            row = leading_whitespace + ' '.join(row_parts) + '\n'
+                            
+                        # For parameter 1 (M1) replacement
+                        if row_parts[0] == '1':
+                            row_parts[1] = f"{M1:.1E}"  # Update with LAM value
+                            row = leading_whitespace + ' '.join(row_parts) + '\n'
+
+                        # For parameter 2 (M2) replacement
+                        if row_parts[0] == '2':
+                            row_parts[1] = f"{M2:.1E}"  # Update with LAM value
+                            row = leading_whitespace + ' '.join(row_parts) + '\n'
+
+                        # For parameter 3 (M3) replacement
+                        if row_parts[0] == '3':
+                            row_parts[1] = f"{M3:.1E}"  # Update with LAM value
                             row = leading_whitespace + ' '.join(row_parts) + '\n'
 
                     
